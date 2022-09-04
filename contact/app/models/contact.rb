@@ -1,5 +1,5 @@
 class Contact < ApplicationRecord
-  audited only: [:first_name, :last_name, :email, :phone_number], on: [:update]
+  has_paper_trail  only: [:first_name, :last_name, :email, :phone_number], on: [:update]
   
   validates :first_name, :last_name, :email, :phone_number, presence: true
   validates :email, uniqueness: true

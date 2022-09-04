@@ -1,6 +1,5 @@
-<% @items = @contact&.audits&.first&.audited_changes %>
 <main class="container">
-  <%= link_to sanitize("&larr; Back to quotes"), contacts_path %>
+  <%= link_to sanitize("&larr; Back to contacts"), contacts_path %>
   <div class="header">
     <h1>
       <%= @contact.first_name %>
@@ -16,29 +15,24 @@
           <li class="list-group-item"> <b> phone_number :</b>  <%= @contact.phone_number%></li>
         </ul>
       </div>
-    </div> 
-
-    <div class="row mt-5">
-      <h2> History of edits </h2>
-      <div class="card col-md-12">
-        <% if @items.nil? %>
-          <p> there are any changes for this item
-          <% else %>
-          <% @items.each do |key, items| %>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item"><%= key %></li>
-              <% items.each do |item| %>
-                <ul class="list-group list-group-flush">
-                  <li class="list-group-item"><%= item %></li>
-                </ul>
-              <% end %>
-            </ul>
-          <% end %>
-        <% end %>
-      </div>
     </div>
+
+    <h2 class="mt-4">History of edits</h2>
+    <% if @versions.length == 0%>
+      <div class="card col-md-12 p-4 my-2">
+        <p> There are any changes for this contact</p>
+      </div>
+    <% else %>
+      <ul>
+        <% @versions.each do |version| %>
+          <li>
+            <div class="card col-md-12 p-4 my-2">
+              More info:
+              <pre><%= version.object %></pre>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
-
-
-  <%#= @all = @contact.audits.first.inspect %>
 </main>

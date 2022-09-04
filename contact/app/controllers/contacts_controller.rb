@@ -6,6 +6,7 @@ class ContactsController < ApplicationController
   end
 
   def show
+    @versions = @contact.versions.order('created_at DESC')
   end
 
   def new
