@@ -1,0 +1,253 @@
+<div class="container">
+   <% @profile = Profile.find_by_id(params[:id])%>
+   <% if current_user.admin? %>
+     <% @jobo = @jobs.where(owner_id: @profile.id) %>
+     <% @sum = @jobs.where(owner_id: @profile.id, status: 3).sum("job_money")%>
+   <% else %>
+      <% @jobo = @jobs.where(owner_id: current_user.profile.id) %>
+      <% @sum = @jobs.where(owner_id: current_user.profile.id, status: 3).sum("job_money")%>
+   <% end %>
+   <% if current_user.enterprise? || (current_user.admin? && @profile.user.enterprise?) %>
+    <div class="card-box mb-30">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="">
+          <h2 class="h4 pd-20">Historique de paiements pour <%= current_user.enterprise? ? current_user.profile.nom_societe : @profile.nom_societe %></h2>
+        </div>
+        <% if current_user.admin? %>
+          <div class="mr-4">
+            <button class="btn btn-gray px-4 py-2" onclick="ExportToExcel('xlsx')">
+              <span class="text-dark me-3">Export</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V17" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 12L12 16L16 12" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2V16" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+        </div>
+        <% end %>
+      </div>
+      <table class="data-table table-responsive-sm table-hover table nowrap" id="my-jobs">
+        <thead>
+          <th>Nom employé</th>
+          <th>Intitulé job</th>
+          <th>Date de début </th>
+          <th>Durée</th>
+          <th >montant du job</th>
+          <th >Note obtenue</th>
+          <th >status</th>
+        </thead>
+        <tbody>
+        <% @jobo.each do |job| %>
+          <%# job.proposals.where(job_id: job.id).each do |proposal| %> 
+          <% if !job.proposal.nil? %> 
+            <tr>
+              <% time = "#{(job.end_date - job.start_date)/3600}" %>
+              <% time_decimal = time.to_f.modulo(1) %>
+              <td><%= link_to "#{job.proposal.owner.nom} #{job.proposal.owner.prenom}", profile_path(job.proposal.owner.id) %></td>
+              <td><%=link_to job.admin_job_category.title, job_path(job.id)%></td>
+              <%# <td class=""><%= job.employee_money</td>%>
+              
+              <td class=""><%= job.start_date.to_formatted_s(:short)  %></td>
+              <td><%= time.to_i %> H <%= (time_decimal * 60).to_i  %> mins</td>
+              <td class=""><%= job.job_money%> $CAD</td>
+              <td class="job-mark">
+                <% job.reviews.where(profile_id: current_user.admin? || current_user.assistant? ? @profile.id : current_user.profile.id).each do |review|%>
+                  <p><span class="big-mark"><%= review.rate * 2 %></span>/10</p>
+                <% end %>
+              </td>
+                <% if  job.status == "posted" %>
+                <td class=" text-left badge bg-success p-2 text-light float-right m-3"> Disponible </td>
+                <% elsif job.status == "in_progress" %>
+                    <td class=" badge bg-warning p-2 text-light float-right m-3"> En cours </td>
+                <% elsif job.status == "draft" %>
+                  <td class=" badge bg-info p-2 text-light float-right m-3"> Brouillon </td>
+                <% elsif job.status == "finished" %>
+                  <td class=" badge bg-danger p-2 text-light float-right m-3"> Terminé </td>
+                <% end %>
+            </tr>
+          <% end %>
+          <%# end %>
+        <% end %>
+        </tbody>
+      </table>
+      <div class="row" id="bilan">
+        <div class="col-md-3 text-right">
+          <div class="total">
+            <% @subscription = Paiement.where("owner_id = ? AND subscription =?", current_user.admin? ? @profile.id : current_user.id, true).first %>
+             <% @total = @subscription.montant - @sum  %>
+             <p class="m-2 p-2 h4 text-right">Total : <%= @subscription.montant - @sum  %> $CAD</p>
+          </div>
+        </div>
+        
+        <div class="col-md-3">
+          <div class="missing">
+            <% paid = 0%>
+            <% Paiement.where(owner_id: current_user.admin? ? @profile.id : current_user.id, subscription: false).each do |paiement|%>
+              <% paid += paiement.montant %>
+            <% end%>
+            <p class="m-2 p-2 h4 text-right">Payé : <%= paid %> $CAD</p>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="missing">
+              <p class="m-2 p-2 h4 text-right">Restant: <%= @total + paid  %> $CAD</p>
+            </div>
+          </div>
+        <div class="col-md-3">
+          <ul class="text-right paiement-list">
+          <li>Total HT: <%= number_with_precision( @sum / 1.14975, :precision => 2) %> $CAD</li>
+          <li>TPS: <%= number_with_precision( (@sum / 1.14975) * 0.05, :precision => 2) %> $CAD</li>
+          <li>TVQ: <%= number_with_precision( (@sum / 1.14975) * 0.09975, :precision => 2) %> $CAD</li>
+          <li class="bold"><strong>Total TTC: <%= @sum %> $CAD</strong></li>
+        </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <% if current_user.worker? || (current_user.admin? && @profile.user.worker?)%>
+    <div class="card-box mb-30">
+      <h2 class="h4 pd-20">Paiements de jobs pour <%= current_user.worker? ? current_user.profile.nom+" "+current_user.profile.prenom : @profile.nom+" "+@profile.prenom %></h2>
+      <table class="data-table table-responsive-sm table-hover table nowrap" id="my-jobs">
+        <thead>
+          <th>Nom entreprise</th>
+          <th>Intitulé job</th>
+          <th>Date de début </th>
+          <th>Durée</th>
+          <th >montant du job</th>
+          <th >Note obtenu</th>
+          <th >status</th>
+        </thead>
+        <tbody>
+          <% @totalpaiement = 0 %>
+          <% @p = 0%>
+          <% if current_user.admin? %>
+              <%# @proposals = Proposal.all.order('created_at desc').where(owner_id: @profile.id) %>
+              <% @proposals =  @profile.proposals.includes(:job).order('jobs.start_date DESC') %>
+          <% else %>
+              <%# @proposals = Proposal.all.order('id desc').where(owner_id: current_user.profile.id) %>
+              <% @proposals = current_user.profile.proposals.includes(:job).order('jobs.start_date DESC') %>
+          <% end %>
+          <% @proposals&.each_with_index do |proposal, index| %> 
+            <% time = "#{(proposal.job.end_date - proposal.job.start_date)/3600}" %>
+            <% time_decimal = time.to_f.modulo(1) %>
+            <%# if current_user.admin? %>
+                <%# @proposals = job.proposals.where(owner_id: @profile.id) %>
+            <%# else %>
+                <%# @proposals = job.proposals.where(owner_id: current_user.profile.id) %>
+            <%# end %>
+             <%#= current_user.job.proposal.inspect %> 
+            
+             <%# @proposals.where(owner_id: @profile.id ).each do | proposal | %> 
+              <%# if !proposal.job.nil? %> 
+                <tr>
+                  <td><%= link_to proposal.job.owner.nom_societe, profile_path( proposal.job.owner.id) %></td>
+                  <td><%=link_to   proposal.job.admin_job_category.title, job_path( proposal.job.id)%></td>
+                  <%# <td class=""><%= job.employee_money</td>%>
+                  <td><%=  proposal.job.start_date.to_formatted_s(:short)  %></td>
+                  <td><%= time.to_i %> H <%= (time_decimal * 60).to_i  %> mins</td>
+                  <td class=""><%=   proposal.job.employee_money%> $CAD</td>
+                  <td class="job-mark">
+                   <% proposal.job.reviews.where(profile_id: current_user.id, job_id: proposal.job.id).each do |review|%>
+                      <% if review != nil %>
+                          <% if review.rate.nil? %>
+                            <span> pas encore attribuer</span> :  
+                          <% else %>
+                            <p><span class="big-mark"><%= review.rate * 2 %></span>/10</p>
+                          <% end %>
+                      <% else %>
+
+                      <% end %>
+                   <% end %>
+                  </td>
+                  <% if  proposal.job.status == "posted" %>
+                      <td class=" badge bg-success p-2 text-light text-right m-3"> Disponible </td>
+                  <% elsif   proposal.job.status == "in_progress" %>
+                      <td class=" badge bg-warning p-2 text-light text-right m-3"> En cours </td>
+                  <% elsif  proposal.job.status == "draft" %>
+                    <td class=" badge bg-info p-2 text-light text-right m-3"> Brouillon </td>
+                  <% elsif   proposal.job.status == "finished" %>
+                    <td class=" badge bg-danger p-2 text-light text-right m-3"> Terminé </td>
+                  <% end %>
+                </tr>
+                <% @totalpaiement +=  proposal.job.employee_money.to_f %>
+                <% @p = @totalpaiement %>
+              <%# end %>
+            <%# end %>
+          <% end %>
+        </tbody>
+      </table>
+
+      <% @totalpai = 0  %>
+      <%#= Proposal.all.where(status:0).inspect %>
+      <% @proposals&.each_with_index do |proposal, index| %>
+      <%#= proposal.job.title%>
+        <%# if current_user.admin? %>
+            <%## @proposals = job.proposals.where(owner_id: @profile.id) %>
+        <%# else %>
+            <%# @proposals = job.proposals.where(owner_id: current_user.profile.id) %>
+        <%# end %>
+        <%# @proposals.each do | prop | %> 
+         <% if proposal.job.status == "finished"%> 
+          <% @totalpai += proposal.job.employee_money.to_f %>
+          <% @pa = @totalpai  %>
+         <% end %>
+        <%# end %>
+      <% end %>
+      
+      <div id="bilan">
+         <div class="row">
+          <div class="col-md-3 text-right">
+            <div class="total">
+              <% @subscription = Paiement.where("owner_id = ? AND subscription =?", current_user.admin? ? @profile.id : current_user.id, true).first %>
+              <p class="m-2 p-2 h4 text-left">À payer :  <%= @total = @subscription.montant + @totalpai  %>$CAD</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="paid">
+              <% paid = 0%>
+              <% Paiement.where(owner_id: current_user.admin? ? @profile.id : current_user.id, subscription: false).each_with_index do |paiement, index|%>
+                <% paid += paiement.montant %>
+              <% end%>
+              <p class="m-2 p-2 h4 text-right">Payé : <%= paid %> $CAD</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="missing">
+              <p class="m-2 p-2 h4 text-right"> Dû : <%= @total - paid %> $CAD</p>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="money-rest">
+              <p class="m-2 p-2 h4 text-right"> Total job : <%= @totalpai.to_f %> $CAD</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+<script>
+  function ExportToExcel(type, fn, dl) {
+    var elt = document.getElementById('my-jobs');
+    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+    return dl ?
+        XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+        XLSX.writeFile(wb, fn || ('paiement.' + (type || 'xlsx')));
+  }
+  // $(document).ready(function() {
+    $('#my-jobs').DataTable( {
+        "paging":   true,
+        "ordering": false,
+        "info":     true,
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+      }
+    });
+  // });
+</script>

@@ -1,0 +1,75 @@
+<% if user_signed_in?%>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5">
+    <%= link_to root_path, class:"navbar-brand " do  %>
+      <%= image_pack_tag "logo-naturetropicale.png" %>
+    <% end %>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto d-flex align-items-center">
+        <%# <li class="nav-item">
+          <% if policy(:job).create? %>
+            <%# <%= link_to 'New job', jobs_path, :class => 'nav-link btn-primary text-light'%>
+          <%# <% end %> 
+        <%# </li>  %>
+        <% if current_user.profile.present? && current_user.profile.approved? %>
+          <li class="nav-item active">
+            <%= link_to 'Accueil',  root_path, :class => 'nav-link'%>
+          </li>
+           <% if policy(:job).create? %>
+            <li class="nav-item dropdown">
+            
+              <%= link_to 'Job <b class="caret"></b>'.html_safe, jobs_path, :id => 'navbarDropdownMenuLink', :'data-toggle' => 'dropdown', :class => 'nav-link dropdown-toggle' %>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <%#= link_to 'Jobs', jobs_path, :class => 'dropdown-item'%>
+                    <%= link_to 'Poster un job', new_job_path, :class => 'dropdown-item'%>
+                    <%= link_to 'Brouillons',  drafts_jobs_path, :class => 'dropdown-item'%>
+                </div>
+            </li>
+          <% end %>
+
+          <li class="nav-item dropdown">
+            <%= link_to 'Facturation <b class="caret"></b>'.html_safe, jobs_path, :id => 'navbarDropdownMenuLink', :'data-toggle' => 'dropdown', :class => 'nav-link dropdown-toggle' %>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <%#= link_to 'Jobs', jobs_path, :class => 'dropdown-item'%>
+                <% if policy(:job).create? %>
+                  <%= link_to 'Facturation', job_paiement_jobs_path, :class => 'dropdown-item'%>
+                <% end %>
+                <% if policy(:proposal).create? %>
+                  <%#= link_to 'Mes soumissions', proposals_path, :class => 'dropdown-item'%>
+                  <%= link_to 'Rémunérations', job_paiement_jobs_path, :class => 'dropdown-item'%>
+                <% end %>
+                <%= link_to 'Paiements',  paiement_history_profile_path(current_user.profile.id), :class => 'dropdown-item'%>
+              </div>
+          </li>
+         
+        <% end %>
+        <% if current_user.profile.present?%>
+          <li class="nav-item dropdown">
+            <%#= link_to 'Compte <b class="caret"></b>'.html_safe, edit_profile_path(current_user.profile.id) , :id => 'profile', :'data-toggle' => 'dropdown', :class => 'nav-link dropdown-toggle' %>
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               
+                <% if current_user.profile.photo.attached? %>
+                  <%= image_tag current_user.profile.photo,:width =>"40", :height =>"40", :class=>"rounded-circle" %>
+                <%else%>
+                  <%=  image_pack_tag 'login-img.png', :width =>"40", :height =>"40", :class=>"rounded-circle"%>
+                <%end%>
+                <% if current_user.enterprise? %>
+                  <%= current_user.profile.nom_societe %>
+                <% else %>
+                   <%= current_user.profile.prenom %>
+                <% end %>
+                <b class="caret"></b>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profile">
+              <%= link_to 'Profil',profile_path(current_user.profile.id), :class => 'dropdown-item'%>
+              <%= link_to "Déconnexion", destroy_user_session_path, :class => 'dropdown-item', method: :delete %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </nav>
+<% end %>
+  <!-- partial -->

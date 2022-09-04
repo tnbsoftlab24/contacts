@@ -1,0 +1,5 @@
+<h2>Bonjour  <%= @proposal.owner.prenom %> </h2>
+<p>Votre offre sur  <%= link_to @proposal.job.admin_job_category.title, proposal_url(@proposal.job.id)  %> a été accepté.</p>
+<p>Cliquez sur ce <%=link_to "lien", proposal_url(@proposal.job.id)%> pour plus de details.</p>
+<p>Cordialement,</p>
+<p>L'équipe Nature Tropicale</p>

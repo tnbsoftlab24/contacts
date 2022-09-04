@@ -1,0 +1,89 @@
+
+
+<nav id="sidebar">
+	<div class="sidebar-header">
+		<%= link_to admin_dashboard_index_path, data: {turbolinks: false }, class:"dropdown-toggle" do  %> 
+				<h3><%= image_pack_tag "logo-naturetropicale.png" %></h3>
+		<% end%>
+		<%= link_to admin_dashboard_index_path, data: {turbolinks: false }, class:"dropdown-toggle" do  %> 
+				<strong><%= image_pack_tag "logo-naturetropicale-small.png" %></strong>
+		<% end%>
+	</div>
+
+	<ul class="list-unstyled components">
+		<li class="active">
+			<%= link_to  profiles_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-users"></i>
+				Comptes
+			<% end%>
+		</li>
+		<li>
+			<%= link_to  jobs_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-briefcase"></i>
+				Jobs
+			<% end%>
+		</li>
+		<li>
+			<%= link_to  admin_job_categories_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-list"></i>
+				Catégories
+			<% end%>
+		</li>
+		<li>
+			<%= link_to  admin_location_provinces_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-flag"></i>
+				Provinces
+			<% end%>
+		</li>
+
+
+		<li>
+			<%= link_to  admin_location_regions_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-globe"></i>
+				Région
+			<% end%>
+		</li>
+		<li>
+			<%= link_to  admin_location_villes_path, class:"dropdown-toggle" do  %> 
+				<i class="mr-4 fas fa-city"></i>
+				Villes
+			<% end%>
+		</li>
+		
+		<% if current_user.admin? || current_user.comptable?  || current_user.assistant?%>
+			<li>
+				<%= link_to  admin_paiement_path, class:"dropdown-toggle" do  %> 
+					<i class="mr-4 fas fa-coins"></i>
+						Comptabilité
+				<% end%>
+			</li>
+			<li>
+				<%= link_to billing_path, class:"dropdown-toggle" do  %> 
+					<i class="mr-4 fas fa-history"></i>
+						Historique
+				<% end%>
+			</li>
+		<% end %>
+		
+
+
+			<%# <li> %>
+					<%# <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle"> %>
+							<%# <i class="mr-4 fas fa-home"></i> %>
+							<%# Comptes %>
+					<%# </a> %>
+					<%# <ul class="collapse list-unstyled" id="homeSubmenu"> %>
+							<%# <li> %>
+								<%#= link_to  admin_users_path, class:"dropdown-toggle" do  %> 
+									<%# <span class="micon dw dw-house-1"></span><span class="mtext">Utilisateurs</span> %>
+								<%# end%>
+							<%# </li> %>
+							<%# <li> %>
+								<%#= link_to profiles_path, class:"dropdown-toggle" do  %> 
+									<%# <span class="micon dw dw-house-1"></span><span class="mtext"> Profils</span> %>
+								<%# end%>
+							<%# </li> %>
+					<%# </ul> %>
+			<%# </li> %>
+	</ul>           
+</nav>

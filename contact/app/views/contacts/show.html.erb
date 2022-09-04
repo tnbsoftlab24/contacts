@@ -1,0 +1,44 @@
+<% @items = @contact&.audits&.first&.audited_changes %>
+<main class="container">
+  <%= link_to sanitize("&larr; Back to quotes"), contacts_path %>
+  <div class="header">
+    <h1>
+      <%= @contact.first_name %>
+    </h1>
+  </div>
+  <div class="container">
+   <div class="row">
+      <h2> Details </h2>
+      <div class="card col-md-12">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b> Last name :</b><%= @contact.last_name %></li>
+          <li class="list-group-item"> <b> Email : </b> <%=  @contact.email %></li>
+          <li class="list-group-item"> <b> phone_number :</b>  <%= @contact.phone_number%></li>
+        </ul>
+      </div>
+    </div> 
+
+    <div class="row mt-5">
+      <h2> History of edits </h2>
+      <div class="card col-md-12">
+        <% if @items.nil? %>
+          <p> there are any changes for this item
+          <% else %>
+          <% @items.each do |key, items| %>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><%= key %></li>
+              <% items.each do |item| %>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item"><%= item %></li>
+                </ul>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+
+  <%#= @all = @contact.audits.first.inspect %>
+</main>

@@ -1,0 +1,152 @@
+/*!
+ * FullCalendar v1.6.4 Print Stylesheet
+ * Docs & License: http://arshaw.com/fullcalendar/
+ * (c) 2013 Adam Shaw
+ */
+
+
+/*
+ * Include this stylesheet on your page to get a more printer-friendly calendar.
+ * When including this stylesheet, use the media='print' attribute of the <link> tag.
+ * Make sure to include this stylesheet IN ADDITION to the regular fullcalendar.css.
+ */
+
+
+/* Events
+-----------------------------------------------------*/
+
+.fc-event {
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.fc-state-down,
+.fc-state-active {
+    color: #000;
+}
+
+
+/* for vertical events */
+
+.fc-event-bg {
+    display: none !important;
+}
+
+.fc-event .ui-resizable-handle {
+    display: none !important;
+}
+
+#wrap {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+#external-events {
+    float: left;
+    width: 150px;
+    padding: 0 10px;
+    text-align: left;
+}
+
+#external-events h4 {
+    font-size: 16px;
+    margin-top: 0;
+    padding-top: 1em;
+}
+
+.external-event {
+    /* try to mimick the look of a real event */
+    margin: 10px 0;
+    padding: 2px 4px;
+    background: #3366CC;
+    color: #000;
+    font-size: .85em;
+    cursor: pointer;
+}
+
+.navbar-brand,
+li>.nav-link {
+    color: #000!important;
+}
+
+​#external-events p {
+    margin: 1.5em 0;
+    font-size: 11px;
+    color: #666;
+}
+​#externa //Create Circle
+span.fc-event-color {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 2px 2px 0 0;
+}
+
+span.fc-event-color.green {
+    background: green;
+}
+
+span.fc-event-color.yellow {
+    background: yellow;
+}
+
+span.fc-event-color.orange {
+    background: orange;
+}
+
+span.fc-event-color.red {
+    background: red;
+}
+
+.fc-header-center {
+    text-transform: capitalize;
+}
+
+#wrap {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+#external-events {
+    float: left;
+    width: 150px;
+    padding: 0 10px;
+    text-align: left;
+}
+
+#external-events h4 {
+    font-size: 16px;
+    margin-top: 0;
+    padding-top: 1em;
+}
+
+.external-event {
+    /* try to mimick the look of a real event */
+    margin: 10px 0;
+    padding: 2px 4px;
+    background: #3366CC;
+    color: #fff;
+    font-size: .85em;
+    cursor: pointer;
+}
+
+#external-events p {
+    margin: 1.5em 0;
+    font-size: 11px;
+    color: #666;
+}
+
+#external-events p input {
+    margin: 0;
+    vertical-align: middle;
+}
+
+#calendar {
+    /* 		float: right; */
+    margin: 0 auto;
+    width: 900px;
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px #C3C3C3;
+}

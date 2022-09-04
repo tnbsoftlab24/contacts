@@ -1,0 +1,199 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class=" <%= current_user.admin? ? "col-11 col-sm-10 col-md-9 col-lg-8 col-xl-9 " : "col-11 col-sm-10 col-md-9 col-lg-7 col-xl-7" %>   mb-5 mx-auto form-box">
+     <%= form_with(model: job, local: true) do |form| %>
+      
+      <%# <div class="field">
+        <%= form.label :title %>
+        <%# <%= form.text_field :title, class:"form-control form-control-lg" %> 
+      <%# </div> %>
+      <% if action_name == "edit" %>
+        <% job = Job.find_by_id(params[:id]) %>
+        <% job = job.owner_id %>
+        <% @p = Profile.find_by_id(job) %>
+      <% else %>
+       <% @p = Profile.find_by_id(params[:id]) %>
+      <% end %>
+
+      
+      <div class="field test">
+        <%= form.label :poste %>
+        <% if current_user.enterprise? %>
+           <%= form.collection_select :admin_job_category_id, Profile.find(current_user.profile.id).admin_job_categories.where.not(amount_employee: nil).order(:title), :id, :title, {include_blank: "Choisir un poste..."}, {class: "form-control"} %>
+        <% elsif (current_user.admin? || current_user.assistant? )  && @p != nil %>
+          <% if action_name == "new" || action_name == "new" %>
+            <%= form.collection_select :admin_job_category_id, Profile.find(@p.id).admin_job_categories.where.not(amount_employee: nil).order(:title), :id, :title, {include_blank: "Choisir un poste..."}, {class: "form-control"} %>
+          <% else %>
+             <%= form.collection_select :admin_job_category_id, Profile.find(@job.owner_id).admin_job_categories.where.not(amount_employee: nil).order(:title), :id, :title, {include_blank: "Choisir un poste..."}, {class: "form-control"} %>
+          <% end %>
+        <% end %>
+         <span class="<%= (@job.errors[:admin_job_category_id].empty? ? 'd-none' : 'd-block text-danger') %>"> Ce champ est obligatoire </span>
+      </div>
+
+      <div class="field">
+        <%= form.label :Description %>
+        <%= form.text_area :description,:placeholder => "Décrivez les fonctionnalités du poste choisi.",size: "20x5", class:"form-control" %>
+         <span class="<%= (@job.errors[:description].empty? ? 'd-none' : 'd-block text-danger') %>"> Ce champ est obligatoire </span>
+      </div>
+
+      <div id="adresses">
+        <label class="mt-3 mb-0">Adresse du Job</label>
+        <ul class="">
+          <li class="my-2">
+            <%# <input type="radio" name="job[type_adress]" checked="checked", value= 0 />  %>
+             <%= form.radio_button :type_adress, '0', :checked => true %> 
+            <span class="card-title">Adresse principal du job </span>
+          </li>
+          
+          <li class="my-2">
+            <%# <input type="radio" name="job[type_adress]", value= 1 /> %>
+             <%= form.radio_button :type_adress, '1' %> 
+            <span class="card-title">Autres adresses du job </span>
+          </li>
+        </ul>
+        
+        <div id="adresse0" class="desc my-4">
+          <div class="field">
+            <%= form.label :Adresse_principal_du_job%>
+            <% if current_user.enterprise? %>
+              <input placeholder="Adresse principale du job ..." value="<%= current_user.profile.adresse %>" class="form-control" type="text" id="job_job_adress" disabled>
+              <%#= form.text_field :job_adress, placeholder: "Adresse principale du job ...", :value => current_user.profile.adresse, class: "form-control"  %> 
+            <% elsif  current_user.admin?  && @p != nil %>
+              <input placeholder="Adresse principale du job ..." value="<%= @p.adresse %>" class="form-control" type="text" id="job_job_adress"  disabled>
+            <% end %>
+          </div>
+        </div>
+        <div id="adresse1" class="desc  my-4" style="display: none;">
+          <div class="field">
+            <%= form.label :Autre_adresse_du_job%>
+            <% if current_user.enterprise? %>
+              <%= form.collection_select :job_adress, Profile.joins(:multi_places ).select('multi_places.adresse').where('profile_id=?',current_user.profile.id).order(:adresse), :adresse, :adresse, {include_blank: "Choisir une autre adresse du job..."}, {class: "form-control"}  %> 
+            <% elsif current_user.admin?  && @p != nil %>
+                <%= form.collection_select :job_adress,Profile.joins(:multi_places ).select('multi_places.adresse').where('profile_id=?', @p.id).order(:adresse), :adresse, :adresse, {include_blank: "Choisir une autre adresse du job..."}, {class: "form-control"}  %> 
+            <% end %>
+            <span class="<%= (@job.errors[:job_adress].empty? ? 'd-none' : 'd-block text-danger') %>"> Ce champ est obligatoire </span>
+          </div>
+        </div>
+      </div>
+      
+      <!--<div class="field">
+        <%#= form.label :Ville_du_job%>
+        <%#= form.collection_select :ville_id , Admin::Location::Ville.all, :id, :name, {include_blank: "Choisir une ville..."}, {class: "form-control"} %>   
+      </div>-->
+
+       <div class="field">
+        <%= form.label :informations_spécifiques %>
+        <%= form.text_area :information_specifique,size: "20x5",:placeholder => "Ajoutez les informations supplémentaires liées au poste ou à l’entreprise", class:"form-control" %>
+        <span class="<%= (@job.errors[:description].empty? ? 'd-none' : 'd-block text-danger') %>"> Ce champ est obligatoire </span>
+      </div>
+
+      <% if (current_user.admin?) %>
+        <%= link_to_add_row('Ajouter un extra', form, :extras, class: 'btn btn-primary mt-4') %>
+        <div class="fields mt-2 mb-5">
+          <%= form.fields_for :extras do |builder| %>
+            <fieldset>
+                <%= render 'extra', form: builder %>
+            </fieldset>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="field">
+        <%= form.label :Date_de_début %>
+        <%= form.datetime_field :start_date, selected:Date.today , min: Date.today, max: 1.year.from_now, class:"form-control", id:"datetimepicker2" %>
+        <span class="<%= (@job.errors[:start_date].empty? ? 'd-none' : 'd-block text-danger') %>"> Ce champ est obligatoire </span>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12  mt-4">
+          <h6>Nombre d'heures sollicité</h6>
+        </div>
+        <div class="col-md-6">
+          <div class="field">
+              <i><%= form.label :Heures %></i>
+              <% if !(action_name == "edit") %>
+                <%#= form.number_field :draft_end_date, id:"date_hour", class:"form-control" %>
+                <%= form.select :draft_end_date, ['1', '2', '3', '4', '5', '6','7', '8', '9', '10', '11', '12'],{}, {class:"form-control", id:"date_hour"} %>
+              <% else %>
+                <%= form.select :draft_end_date,  ['1', '2', '3', '4', '5', '6','7', '8', '9', '10', '11', '12'],{:selected => ((@job.end_date - @job.start_date)/3600).to_i}, { id:"date", :class => "form-control"} %>
+              <% end %>
+          </div>
+        </div>
+         <div class="col-md-6">
+          <div class="field">
+            <i> <%= form.label :minutes %></i>
+            <%#= form.number_field :job_mins, class:"form-control" %>
+           
+             <% if !(action_name == "edit") %>
+                <%#= form.number_field :draft_end_date, id:"date_hour", class:"form-control" %>
+              <%= form.select :draft_job_mins, ['00', '15', '30', '45'],{}, {class:"form-control"} %>
+            <% else %>
+               <%= form.select :draft_job_mins, ['00', '15', '30', '45'],{:selected =>((((@job.end_date - @job.start_date)/3600).modulo(1))*60).to_i}, { :class => "form-control"} %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <%= form.label :facteur%>
+         <% if !(action_name == "edit") %>
+          <%= form.select :factor, options_for_select({ "x1 (Pour les jours normaux)" => "1", "x2 (Pour les jours fériés)" => "2"}, "1") ,{include_blank: false}, class: "form-control" %><br>
+        <% else %>
+          <%= form.select :factor, options_for_select({ "x1 (Pour les jours normaux)" => "1", "x2 (Pour les jours fériés)" => "2"}, "#{ @job.factor}"),{include_blank: false}, class: "form-control" %><br>
+        <% end %>
+      </div>
+
+      <%#= time_zone_select :time_zone, ActiveSupport::TimeZone.all, nil, {:include_blank => false}, :id => 'time-zone-select' %>
+
+      <div class="field d-flex justify-content-between">
+          <div class=""> 
+             <label class="">
+              <%= form.check_box :taux, class:"" %> Appliquer un taux supplémentaire
+             </label>
+          </div>
+          <%if current_user.admin? %>
+            <div class=""> 
+                <label class="">
+                  <%= form.check_box :employee_dues, class:"" %> Activer frais supplementaires pour les employees
+                </label>
+            </div>
+          <% end %>
+      </div>
+      <div class="form-check">
+        <% if (current_user.admin?) %>
+           <% if action_name == "new" %>
+            <%= form.hidden_field :owner_id, id: "job-owner", :value => Profile.find(params[:id]).id %>
+          <% else %>
+             <%= form.hidden_field :owner_id, id: "job-owner", :value => @job.owner_id %>
+          <% end %>
+        <% else %>
+          <%= form.hidden_field :owner_id, :value => current_user.profile.id %>
+        <% end %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Enregistrer", class:"btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" %>
+      </div>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $("input[name$='job[type_adress]']").click(function() {
+    var test = $(this).val();
+    $(".desc").hide();
+    $("#adresse" + test).show();
+  });
+
+  if ($("#job_type_adress_1").is(':checked')) {
+      $("#job_type_adress_1").click();
+  }else if($("#job_type_adress_0").is(':checked')) {
+      $("#job_type_adress_0").click();
+  }
+
+  $('#datetimepicker').datetimepicker();
+
+
+</script>
+

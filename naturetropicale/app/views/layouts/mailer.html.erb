@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <%= stylesheet_link_tag "foundation_emails" %>
+     <style type="text/css">
+  body,
+  html, 
+  .body {
+    background: #f3f3f3 !important;
+    font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Ubuntu,sans-serif;
+    /* font-family: var(--sail-baseFont); */
+    overflow-x: hidden;
+    max-width: 100%;
+    color: rgba(79, 86, 107, 0.81);
+    line-height: 1.5;
+    font-size: 14px;
+  }
+
+  
+
+  small{
+    color:rgba(79, 86, 107, 0.57);
+  }
+
+</style>
+  </head>
+ 
+  <center>
+
+    <body>
+    
+      <table style="background: #fff; margin-top:4rem;" data-made-with-foundation>
+     
+        <tr>
+          <td style="padding: 1rem 4rem 2rem;width:500px;" class="left" align="left" valign="top">
+            <div>
+              <spacer size="16"></spacer>
+                <container>
+                  <center style="padding: 1rem 4rem 2rem;">
+                    <a class="logo" > 
+                        <%= image_tag 'https://naturetropicale.ca/wp-content/themes/naturetropicale/images/logo.png', :style =>"margin:0 auto; width:146px"%> 
+                    </a>
+                  </center>
+                  <row>
+                    <columns>
+                      <spacer size="32"></spacer>
+                        <%= yield %>
+                      <hr/>
+                      <p>
+                        <small>
+                          <center>Vous recevez cet e-mail, car vous vous êtes inscrit aux mises à jour par e-mail <a href="naturetropicale.ca">naturetropicale.ca</a>.
+                          | info@naturetropicale.ca | 2-315 Rue Monseigneur Gauvreau, Quebec, QC. G1K 6N9
+                          </center>
+                        </small>
+                      </p>
+                    </columns>
+                  </row>
+                  <spacer size="16"></spacer>
+                </container>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Naturetropicale</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+      <div class="">
+        <%#= flash_messages %>
+      </div>
+      <% if current_user.admin? || current_user.comptable? || current_user.assistant? %>
+        <div class="wrapper">
+            <!-- Sidebar  -->
+            <%= render 'layouts/admin-shared/sidebar' %>
+            <%= render 'layouts/admin-shared/navbar' %>
+            <!-- Page Content  -->
+        </div>
+      <% end %>
+
+       <script>
+        $(document).ready(function() {
+          $('#sidebarCollapse').on('click', function() {
+              $('#sidebar').toggleClass('active');
+              $('#content').toggleClass('active');
+          });
+        });
+      </script>
+  </body>
+</html>

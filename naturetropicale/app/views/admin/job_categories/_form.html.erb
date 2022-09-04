@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="row">
+    <div class="col-10 col-sm-8 col-md-7 col-lg-7 col-xl-6 mx-auto form-box">
+      <%= form_with(model: admin_job_category, local: true) do |form| %>
+        <% if admin_job_category.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(admin_job_category.errors.count, "erreurs") %> empêchent la categorie d'être sauvegardé:</h2>
+
+            <ul>
+              <% admin_job_category.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="field">
+          <%= form.label :titre %>
+          <%= form.text_field :title, {class: "form-control"} %>
+        </div>
+
+        <div class="field">
+          <%= form.label :prix %>
+          <%= form.number_field :amount_employee,step: :any, class: "form-control" %>
+        </div>
+
+        <div class="field">
+          <%= form.label :parent_id%>
+          <%= form.collection_select  :parent_id, Admin::JobCategory.where(parent_id: nil ), :id, :title, {include_blank: "Choisir une catégorie..."}, {class: "form-control"} %>
+        </div>
+
+        <div class="actions  mt-5">
+          <%= form.submit "Enregistrer", class:"btn btn-block btn-lg" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+

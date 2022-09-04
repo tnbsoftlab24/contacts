@@ -1,0 +1,41 @@
+<div class="nested-experiences-fields pt-4">
+    <%= form.hidden_field :_destroy %>
+      <% if (current_user.admin?  && action_name == "edit") %>
+        <%= form.hidden_field :profile_id, :value => @profile.id %>
+      <% else %>
+        <%= form.hidden_field :profile_id, :value => current_user.id %>
+      <% end %>
+    <div class="row ">
+      <div class="col-md-6">
+         <div>
+          <%= form.label :Poste %>
+          <%= form.grouped_collection_select :admin_job_category_id, Admin::JobCategory.where(parent_id: nil).order(:title), :children, :title, :id, :title, {include_blank: "Choisir une catégorie..."}, {class: "form-control"} %>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div>
+          <label for="nb_experience">Nombre d'années d'experiences</label>
+          <%= form.number_field :nb_experience,  class:"form-control" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+      <div class="col-md-12">
+        <%= form.label :description %>
+        <%= form.text_area :description,  class:"form-control" %>
+      </div>
+    </div>
+      
+    <div class="row pt-4">
+      <div class="col-md-12">
+        <%= form.label :diplôme %>
+        <%= form.text_area :diplome,  class:"form-control" %>
+      </div>
+    </div>
+
+    <div>
+       <%= link_to 'supprimer', '#', class: 'remove_record' %>
+    </div>
+</div>

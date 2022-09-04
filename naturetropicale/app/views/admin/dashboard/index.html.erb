@@ -1,0 +1,201 @@
+<div id="btnContainer" class="container text-right">
+
+  <div class="row justify-content-between">
+    <div class="col-md-4 col-xl-4 mr-auto">
+      <select class="form-control  home-select" id="select-home">
+        <option value="all">Toutes les offres</option>
+        <% Admin::JobCategory.all.where(parent_id: nil).order(:title).each do |parent| %>
+         <optgroup label="<%=  parent.title %>">
+          <% parent.children.order(:title).each do |child| %>
+            <option value="<%= child.title.parameterize %>"><%=  child.title %></option>
+          <%end %>
+          </optgroup>
+        <% end %>
+      </select>
+    </div>
+
+    <div class="col-md-4 col-xl-4 mr-auto"> 
+      <select class="form-control  home-place" id="select-place">
+        <option value="all">Toutes les Villes</option>
+        <% @provinces.order(:name).each do |province| %>
+            <option value="<%= province.name %>"><%=  province.name %></option>
+            <% @regions.where(province_id: province.id).order(:name).each do |region| %>
+            <option value="<%= region.name %>">&nbsp;&nbsp;&nbsp;&nbsp;<%=  region.name %></option>
+              <% @villes.order(:name).where(region_id: region.id).order(:name).each do |ville| %>
+                <%= region.villes.order(:name)%>
+                 <option value="<%= ville.name %>">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=  ville.name %></option>
+              <% end %>
+           <% end %>
+        <% end %>
+      </select>
+    </div>
+  
+    <div class="col-md-4 col-lg-11 col-xl-4">
+      <button id="btn-calendar" class="btn table-jobs active"><i class="far fa-calendar-alt"></i> Calendrier</button>
+      <button id="btn-list" class="btn calendar"><i class="fa fa-bars"></i> Jobs disponibles</button> 
+    </div>
+  </div>
+</div>
+<div id="jobs-calendar" class="form <%= current_user.enterprise? ? " enterprise" : (current_user.worker? ? "worker" : "admin" ) %>" style="display:block;">
+  <div class="row">
+      <div class="col-md-12 col-lg-11 <%= controller_name == "dashboard" ? "col-xl-12" :  "col-xl-10" %> mx-auto">
+        <div class='my-4 form-box'>
+          <div id='wrap'>
+            <div id='calendar'></div>
+            <div style='clear:both'></div>
+          </div>
+           <ul class="legend">
+            <li><span class="green"></span> Normal</li>
+            <li> Normal à taux sup<span class="jaune"></span></li>
+            <li>Jour férié<span class="orange"></span></li>
+            <li>Jour férié à taux sup<span class="red"></span></li>
+            <li>Disponible<span class="green"></span></li>
+            <li>En cours<span class="noire"></span></li>
+            <li>Terminé<span class="violet"></span></li>
+          </ul>
+        </div>
+      </div>
+  </div>
+</div>
+  
+  <div id="jobs-table" class="form" style="display:none;">
+  <div class="row">
+    <div class="col-md-12 col-lg-11 col-xl-12 mx-auto">
+      
+    <div class="mt-4 ">
+      <table id="list-job" class="data-table table-responsive-sm table nowrap form-box">
+        <thead>
+          <tr>
+            <th><%= sortable "poste"%></th>
+            <th>Date de début </th>
+            <th>Durée</th>
+            <%# <th>Localition</th> %>
+            <th>Entreprise</th>
+            <th>Adresse</th>
+            <th> Montant</th>
+            <% if current_user.worker?%>
+              <th></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @jobs.each do |job| %>
+            <% time = "#{(job.end_date - job.start_date)/3600}" %>
+            <% time_decimal = time.to_f.modulo(1) %>
+            <tr>
+              <td><%= link_to job.poste, job_path(job.id), class: "text-primary" %> </td>
+              <td><%= job.start_date.to_formatted_s(:short)  %></td>
+              <td><%= time.to_i %> H <%= (time_decimal * 60).to_i  %> mins</td>
+              <td><%=  job.owner.nom_societe %></td>
+              <% if job.job_adress.blank? %>
+                <td><%=  job.owner.adresse %></td>
+              <% else  %>
+                <td><%=  job.job_adress %></td>
+             <% end %>
+              <% if current_user.worker?%>
+                <td><%=  job.employee_money %> $CAD</td>
+                <td><%= link_to 'Postuler', job_path(job), class: "btn btn-outline-primary" %></td>
+              <% else %>
+                <td><%=  job.job_money %></td>
+              <% end %>
+              <!--<td><%= link_to 'Edit', edit_job_path(job) %></td>
+              <td><%= link_to 'Destroy', job, method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div id="jobs-paginate" class="d-flex justify-content-center my-4">
+    <p class="text-center"><%#= paginate @jobs, theme: 'twitter-bootstrap-4', pagination_class: "pagination-sm", nav_class: "d-inline-b" %></p>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    $(document).on('click', '#btnContainer .btn.active', function(e) {
+        $(this).addClass('active').siblings().removeClass('active');//remove default active class
+        $(".form").toggle();
+    });
+
+    $(document).on('click', '#btnContainer .btn', function(e) {
+        $('.btn.active').removeAttr('disabled');//reset all disabled buttons
+        $(this).addClass('active').siblings().removeClass('active');
+        $(this).attr('disabled','disabled');//disable button upon click
+        $(".form").toggle();
+    });
+
+     $(document).on('click', '#btnContainer #btn-list', function(e) {
+      if($(this).hasClass('active')) {
+        $('.home-select').addClass('d-none');//reset all disabled buttons
+        $('.home-place').addClass('d-none');
+      }
+    });
+
+           
+    $(document).on('click', '#btnContainer #btn-calendar', function(e) {
+      if($(this).hasClass('active')){
+        $('.home-select').removeClass('d-none');
+        $('.home-place').removeClass('d-none');
+      }
+    });
+
+    setTimeout(() => {
+        $(".fc-event-time .fc-event-starttime").each(function() {
+            const starttime = $(this).text();
+            if (starttime.substr(0, 2) === "24") {
+                $(this).text(`00${starttime.substr(2, starttime.length)}`);
+            }
+        });
+        $(".fc-event-time .fc-event-endtime").each(function() {
+            const endtime = $(this).text();
+            if (endtime.substr(3, 2) === "24") {
+                $(this).text(`- 00${endtime.substr(5, endtime.length)}`);
+            }
+        });
+    }, 200);
+  });  
+
+   $(document).ready(function() {
+      $('#list-job').DataTable( {
+          "paging":   true,
+          "ordering": false,
+          "info":     true,
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+        }
+      } );
+    } );
+
+
+    
+
+     $('#select-home').on('change', function() {
+      var val  = $("#select-home option:selected" ).val();
+      if ("" != val) {
+        if ("all" == val) {
+          $("a.fc-event" ).show();
+        } else {
+          $("a.fc-event" ).hide();
+          $("a."+val ).show();
+        }
+      }
+    });
+
+
+    $('#select-place').on('change', function() {
+      var val  = $("#select-place option:selected" ).val();
+      if ("" != val) {
+        if ("all" == val) {
+          $("a.fc-event" ).show();
+        } else {
+          $("a.fc-event" ).hide();
+          $("a."+val ).show();
+        }
+      }
+    });
+
+    
+  
+</script>
+

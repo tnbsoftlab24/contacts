@@ -1,0 +1,24 @@
+<div class="container" id="registration">
+  <div class="row form-height">
+    <div class="col-10 col-sm-8 col-md-7 col-lg-6 col-xl-5 mx-auto form-box">
+      <h2>Mot de passe oublié?</h2>
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+        <%= render "users/shared/error_messages", resource: resource %>
+
+        <div class="field">
+          <%= f.label :Courriel %><br />
+          <%= f.email_field :email,class:"form-control form-control-lg", autofocus: true, autocomplete: "email" %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Réinitialisation",class:"btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" %>
+        </div>
+      <% end %>
+      <div class="text-center">
+        <%= render "users/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+

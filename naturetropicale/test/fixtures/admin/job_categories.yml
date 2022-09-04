@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+
+first:
+  title: Informatique
+  amount: 
+  parent: 
+
+one:
+  title: developpeur
+  amount: 1200
+  parent: 1
+
+two:
+  title: Maintenancier
+  amount: 1400
+  parent: 1

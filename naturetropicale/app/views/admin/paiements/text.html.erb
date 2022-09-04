@@ -1,0 +1,85 @@
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link text-light active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Entreprises</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link text-light " id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Employés</a>
+  </li>
+</ul>
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+   <div class="card-box mb-30">
+      <h2 class="h4 pd-20">Paiements en attente</h2>
+      <table id="waiting-job-1" class="data-table table-responsive-sm table-hover table nowrap">
+        <thead>
+          <th>Entreprise</th>
+          <th>Solde</th>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+        <% @workers_owner = Profile.joins(:user).where(" role =? AND approved = ?", 1, true ) %>
+        <% @workers_owner.each do |profile| %>
+        <%# @.each do |job| %>
+          <%# job.proposals.where(job_id: job.id).each do | proposal | %> 
+            <tr>
+              <td><%= link_to profile.nom_societe, users_course_job_path(profile.id)%> </p></td>
+              <td> <%= profile.total_amount%> </td>
+              <td class="badge badge-pill mt-2  badge-success"><%= link_to "Demander un paiement",paiement_history_profile_path(profile.id), class:"text-light"%></td>
+            </tr>
+          <%# end %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <% Job.group(:owner_id,:job_money).count%>
+  <% @sum = @jobs.where(owner_id: 5).sum("job_money")%> 
+  <% @sum%> 
+
+
+  
+  <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+   <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+    <div class="card-box mb-30">
+      <h2 class="h4 pd-20">Paiements en attente</h2>
+      <table class="data-table  table-responsive-sm table-hover table nowrap" id="waiting-job-2">
+        <thead>
+          <th>Opérations</th>
+          <th>Solde</th>
+          <%# <th>Entreprise</th> %>
+          <th>Actions</th>
+        </thead>
+        <tbody>
+         <% @totalpaiement = 0 %>
+        <%  @jobs_owner = Profile.joins(:user).where("approved = ? AND role =?",  true, 2 ) %>
+        <%  @jobs_owner.each do |profile| %>
+          <%# job.proposals%>
+          <%# job.proposals.where(job_id: job.id).each do | proposal | %> 
+            <tr>
+              <td><%= link_to profile.nom+" "+profile.prenom, users_course_job_path(profile.id) %> a travaillé et son solde est de</p></td>
+              <%# @totalpaiement += proposal.job.employee_money.to_i %>
+              <%# @p = @totalpaiement%>
+              <td><%= profile.total_amount %></p></td>
+              <td class="badge badge-pill mt-2 badge-success"><%= link_to "Effectuer un payement" , paiement_history_profile_path(profile.id), class: "text-light" %></td>
+            </tr>
+          <%# end %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    $('#waiting-job-1, #waiting-job-2').DataTable( {
+        "paging":   true,
+        "ordering": false,
+        "info":     true,
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+      }
+    });
+  });
+</script>

@@ -1,0 +1,40 @@
+<div class="container" id="registration">
+  <div class="row form-height">
+    <div class="col-10 col-sm-8 col-md-6 col-lg-6 col-xl-6 mx-auto form-box">
+      <h2>Renvoyer le mail de confirmation</h2>
+
+      <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+        <%= render "users/shared/error_messages", resource: resource %>
+
+        <div class="field mt-3">
+          <%= f.label :Courriel %><br />
+          <%= f.email_field :email,class:"form-control form-control-lg", autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+        </div>
+
+        <div class="actions mt-5">
+          <%= f.submit "Renvoyer le mail de confirmation",class:"btn btn-block" %>
+        </div>
+      <% end %>
+
+      <div class="my-2 text-center">
+        <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+          <%= link_to "Mot de passe oublié?", new_password_path(resource_name), :class => "auth-link text-black" %><br />
+        <% end %>
+      </div>
+
+      <div class="my-2 text-center">
+        <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+          <%= link_to "Je n'ai pas reçu le mail de confirmation?", new_confirmation_path(resource_name) %><br />
+        <% end %>
+      </div>
+      <div class="text-center mt-4 font-weight-light"> Vous n'avez pas de compte? 
+        <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+          <%= link_to "S'inscrire", new_registration_path(resource_name),class:"text-primary"%><br />
+        <% end %>
+      </div>
+      <div class="text-center">
+        <%#= render "users/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+
+<div class="form-box mb-30">
+  <h2 class="h4 pd-20">Liste des utilisateurs</h2>
+  <%= form_tag profiles_path, :method => 'get', :id => "profiles_search" do %>
+    <div class="row justify-content-between">
+      <div class="my-2 col-md-5">
+        <%= text_field_tag :search, params[:search],class:"form-control w-100", placeholder: 'Rechercher un nom, prenom ou entreprise' %>
+        <div class="d-none">
+          <%= submit_tag "Recherche", :nom => nil %>
+        </div>
+      </div>
+    <div class="text-right"><%= link_to "Utilisateurs", admin_users_path, class:"btn btn-primary text-light" %></div>
+  <% end %>
+  <div id="profiles" class="w-100"><%= render 'profiles' %></div>
+</div>
+
+<script>
+  $(document).on("turbolinks:load", () => {
+    $(function() {
+          $("#profiles th, #profiles .pagination a").on("click", '#search', function() {
+              console.log("Roumba");
+              $.getScript(this.href);
+              return false;
+          });
+          $("#profiles_search input").keyup(function() {
+              $.get($("#profiles_search").attr("action"), $("#profiles_search").serialize(), null, "script");
+              return false;
+          });
+      });
+  });
+</script>
+
+

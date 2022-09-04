@@ -1,0 +1,77 @@
+
+<%= form_for Review.new, remote: true do |form| %>
+  <div class="modal-body">
+      <div class="field">
+       
+        <% if current_user.worker? %>
+          <%= form.hidden_field :job_id, :value =>  params[:id],  class: "form-control" %>
+        <% elsif current_user.enterprise?%>
+            <%= form.hidden_field :job_id, :value => params[:id],  class: "form-control" %>
+        <% end %>
+      </div>
+
+        
+       
+      <div class="field">
+        <% if current_user.enterprise? %>
+          <%= form.hidden_field :profile_id, id: "proposal-owner", :value =>  "", class: "form-control" %>
+        <% elsif current_user.worker? %>
+          <%= form.hidden_field :profile_id, id: "job-owner", :value =>  @job.owner_id,  class: "form-control" %>
+        <% end %>
+      </div>
+
+      <div class="field ">
+        <div class="rating text-center">
+          <input id="star5" name="review[rate]" type="radio" value="5" class="radio-btn hide" />
+          <label for="star5">☆</label>
+          <input id="star4" name="review[rate]" type="radio" value="4" class="radio-btn hide" />
+          <label for="star4">☆</label>
+          <input id="star3" name="review[rate]" type="radio" value="3" class="radio-btn hide" />
+          <label for="star3">☆</label>
+          <input id="star2" name="review[rate]" type="radio" value="2" class="radio-btn hide" />
+          <label for="star2">☆</label>
+          <input id="star1" name="review[rate]" type="radio" value="1" class="radio-btn hide" />
+          <label for="star1">☆</label>
+          <div class="clear"></div>
+        </div>
+      </div>
+      <p class="d-none text-danger text-center" id="error"> entrez obligatoirement une note</p>
+
+      <input  id="marks" name="review[rate]" type="text" class="d-none" required/>
+
+      <div class="field">
+        <% if current_user.enterprise? %>
+            <%= form.label :Laisser_un_commentaire_sur_cet_employé %>
+        <% elsif current_user.worker? %>
+            <%= form.label :Laisser_un_commentaire_sur_cette_entreprise %>
+        <% end %>
+        <%= form.text_area :comment, class:"form-control" %>
+      </div>
+
+    <div class="modal-footer">
+      <div class="actions">
+        <%= form.submit "Notez Maintenant", class: "submit btn btn-primary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<script>
+// if($("#star5").is(':checked')) {
+//     var card_type = $("#star5:checked").val();
+//     alert(card_type);
+// }
+ $(document).ready(function(){
+        $('input[name="review[rate]"]').on('change', function() {
+            // alert($('#star5:checked').val());
+            var marks = $('input[name="review[rate]"]:checked').val()
+            $("#marks").val(marks);
+        });
+        $(".submit").click(function(event) {
+          if($("#marks").val().length === 0) {
+            $("#error").removeClass("d-none"); 
+          }
+        });
+    });
+</script>

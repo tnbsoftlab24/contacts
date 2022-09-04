@@ -1,0 +1,14 @@
+<main class="container">
+  <div class="header">
+    <h1>Contacts</h1>
+    <%= link_to "New contact",
+                new_contact_path,
+                data: { turbo_frame: dom_id(Contact.new) },
+                class: "btn btn--primary" %>
+  </div>
+  <%= turbo_frame_tag Contact.new %>
+  <%= turbo_frame_tag "contacts" do %>
+    <%= render @contacts %>
+  <% end %>
+</main>
+

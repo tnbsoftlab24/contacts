@@ -1,0 +1,14 @@
+<%= turbo_frame_tag contact do %>
+  <div class="quote">
+    <%= link_to contact.first_name, contact_path(contact), data: { turbo_frame: "_top" } %>
+    <div class="quote__actions">
+      <%= button_to "Delete",
+                    contact_path(contact),
+                    method: :delete,
+                    class: "btn btn--light" %>
+      <%= link_to "Edit",
+                  edit_contact_path(contact),
+                  class: "btn btn--light" %>
+    </div>
+  </div>
+<% end %>

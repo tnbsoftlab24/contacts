@@ -1,0 +1,112 @@
+// Place all the styles related to the jobs controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+#job-details {
+    p {
+        font-size: 16px;
+        line-height: 26px;
+    }
+    .job-description {
+        padding: 0.5rem 1rem 1rem;
+    }
+    h1 {
+        padding: 0.5rem 1rem 1rem;
+        font-size: 20px;
+    }
+    .job-details {
+        padding: 0 2rem;
+        h3 {
+            font-size: 18px;
+            border-bottom: 1px solid #838688;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+        }
+        span,
+        p {
+            color: #212529;
+        }
+        #copy-button {
+            font-weight: bold;
+            color: #6db530;
+            text-decoration: none;
+        }
+        p#job-url {
+            border: 1px solid #abacad;
+            margin: 0;
+            font-size: 0.85rem;
+            span {
+                display: block;
+                margin: 5px 10px;
+                overflow: auto;
+            }
+        }
+    }
+}
+
+#my-jobs{
+    td{
+        vertical-align: inherit !important;
+    }
+}
+
+.paiement-list{
+    li:first-child,
+    li:last-child{
+        font-size: 1.2rem;
+    }
+    li{
+        font-size: 1rem;
+        line-height: 1.5rem;
+    }
+}
+
+#deatils-jobs-price{
+    td {
+        padding: 0 0.75rem !important;
+    }
+    th{
+        padding-left: 0.75rem;
+    }
+}
+
+.mt-8 {
+    margin-top: 8px;
+}
+
+#freelancer-section {
+    .img-circle {
+        // border: 1px solid #6db530;
+        border-radius: 50%;
+        text-align: center;
+        padding: 0.2rem;
+        width: fit-content;
+    }
+}
+
+.big-mark {
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.home-select {
+    // margin-left: 8rem;
+    margin-bottom: -4rem;
+}
+
+#jobs-paginate {
+    .page.current {
+        background: #5eacfd;
+        color: #fff;
+        padding: 7px 13px;
+        border-radius: 50px;
+        font-size: 12px;
+    }
+    .page {
+        padding: 7px 0px;
+    }
+}
+
+.btn-gray{
+    background: #f5f5f5;
+    border: none;
+}

@@ -1,0 +1,20 @@
+
+
+<script>
+  $("input[name$='job[type_adress]']").click(function() {
+    var test = $(this).val();
+    $(".desc").hide();
+    $("#adresse" + test).show();
+  });
+
+  if ($("#job_type_adress_1").is(':checked')) {
+      $("#job_type_adress_1").click();
+  }else if($("#job_type_adress_0").is(':checked')) {
+      $("#job_type_adress_0").click();
+  }
+
+  $('#datetimepicker').datetimepicker();
+
+
+</script>
+

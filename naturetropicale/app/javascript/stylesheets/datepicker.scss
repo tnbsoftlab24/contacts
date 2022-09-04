@@ -1,0 +1,51 @@
+span.fc-event-color {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 100%;
+    margin: 0 3px 0 0;
+}
+
+.fc-event {
+    background: green !important;
+    color: #fff !important;
+    border-radius: 4px;
+    .fc-event-inner {
+        border-radius: 4px;
+    }
+}
+
+#jobs-calendar.enterprise {
+    .fc-event-owner {
+        display: none;
+    }
+}
+
+.fc-button {
+    height: 2.2em;
+    background: #000 !important;
+    color: #fff;
+    margin-right: 4px !important;
+}
+
+#jobs-calendar.worker {
+    .fc-event-worker {
+        display: none;
+    }
+}
+
+.fc-event-hori {
+    border: #fff !important;
+}
+
+.fc-event-inner {
+    padding: 3px !important;
+}
+
+.fc-event-inner.in_progress {
+    background-color: blueviolet;
+}
+
+.fc-event-inner.finished {
+    background-color: black;
+}

@@ -1,0 +1,23 @@
+ <table id="users" class="table table-responsive-sm dataTable " style="width:100%">
+  <thead>
+      <tr>
+        <th>Email</th>
+        <th>Date de création</th>
+        <th>Status</th>
+        <th colspan="4">Actions</th>
+      </tr>
+  </thead>
+  <tbody>
+    <% @users_confirmed.each do |user| %>
+      <tr>
+        <td class=""> <%= user.email %></td>
+        <td><%= user.created_at %></td>
+        <td><%= user.created_at %></td>
+        <!--<td><%#= link_to "Verifier Cv ", user.profile.cv %></td>  -->
+        <td  colspan="2" class="  ">
+          <label class="badge badge-success">Compte confirmé</label>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

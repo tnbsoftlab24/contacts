@@ -1,0 +1,93 @@
+<div class="container">
+  <div class="card-box mb-30">
+    <%# if current_user.profile.id == @pro  || current_user.admin? || current_user.comptable? %>
+      <div class="card-box mb-30">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="">
+              <h2 class="h4 pd-20">Historique de paiements cccc </h2>
+          </div>
+          <div class="mr-4">
+            <button class="btn btn-gray px-4 py-2" onclick="ExportToExcel('xlsx')">
+              <span class="text-dark me-3">Export</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 17V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V17" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8 12L12 16L16 12" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 2V16" stroke="#333333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <% @totalpaiement = 0 %>
+        <% @p = 0 %>
+        <table id="billing" class="data-table  table-responsive-sm table-hover table">
+          <thead>
+            <tr>
+              <th>Versements</th>
+              <th> Commentaires</th>
+              <th >Date de paiement</th>
+              <th >Pièce jointe</th>
+              <th >Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%# if @profile.present? %>
+              <% @paiements.each do |paiement| %>
+
+                <tr>
+                  <td><%= paiement.montant %>$CAD</td>
+                  <td><%= paiement.comment %></td>
+                  <td><%= paiement.created_at %></td>
+                  <% if !paiement.subscription? %>
+                      <% if @profile.user.worker? %>
+                        <td><%= link_to "Fiche de paie", paiement.received if paiement.received.attached?  %></td>
+                      <% else %>
+                        <% if !paiement.received.attached? %>
+                          <td>Aucune</td>
+                        <% else %>
+                          <td><%= link_to "Facturation", paiement.received if paiement.received.attached?  %></td>
+                        <% end %>
+                      <% end %>
+                      <% if paiement.confirmation.nil?%>
+                        <% if current_user.worker?%>
+                            <td class=""><%= link_to "Confirmer paiement", confirmation_paiement_profile_path(:paiement => paiement.id), remote: true, method: :post%></td>
+                        <% elsif current_user.enterprise? %>
+                          <% if paiement.admin_confirmation.nil? %>
+                              <td class=""><%= link_to "Effectuer paiement", pay_bill_profile_path(:paiement => paiement.id), remote: true, method: :post%></td>
+                            <% else %>
+                                <td class="text-success"><i class="fas fa-check"></i></td>
+                            <% end %>
+                          <% else %>
+                            <% if paiement.admin_confirmation.nil? %>
+                                <%# <td class="badge badge-danger mt-2">Confirmation en cours</td> %>
+                                <td class=""><%= link_to "Annuler paiement",  canceled_paiement_profile_path(:paiement => paiement.id), remote: true, method: :post%></td>
+                                
+                            <% else %>
+                              <td class=""><%= link_to "Confirmer paiement", confirmation_paiement_profile_path(:paiement => paiement.id), remote: true, method: :post%></td>
+                              <%# <td class="text-success"><i class="fas fa-check"></i></td> %>
+                            <% end %>
+                          <% end %>
+                        <% else %>
+                            <td class="text-success"><i class="fas fa-check"></i></td>
+                      <% end %>
+                    <%# <% end %>
+                  <% end %>
+                </tr>
+              <% end %>
+            <%# end %>
+          </tbody>
+        </table>
+    <%# end %>
+  </div>
+</div>
+
+<script>
+  $('#billing').DataTable( {
+      "paging":   true,
+      "ordering": true,
+      "info":     true,
+      "rowReorder": true,
+      "language": {
+        "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+    }
+  });
+</script>

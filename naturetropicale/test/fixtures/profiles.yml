@@ -1,0 +1,61 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  prenom: MyString
+  num_tel: MyString
+  nationalite: MyString
+  adresse1: MyString
+  adresse2: MyString
+  ville: MyString
+  region: MyString
+  province: MyString
+  pays: MyString
+  code_postal: MyString
+  secteur_activite: MyString
+  post_souhaite: MyString
+  nom_contact: MyString
+  tel_contact: MyString
+  email_contact: MyString
+  sondage: MyString
+  nom_societe: MyString
+  num_entreprise_quebec: MyString
+  statut_juridique: MyString
+  nom_actionnaire_principal: MyString
+  actionnaire_tel: MyString
+  actionnaire_email: MyString
+  nom_gestionnaire: MyString
+  num_gesttionnaire: MyString
+  photo: MyString
+  cv: MyString
+  user: one
+
+two:
+  name: MyString
+  prenom: MyString
+  num_tel: MyString
+  nationalite: MyString
+  adresse1: MyString
+  adresse2: MyString
+  ville: MyString
+  region: MyString
+  province: MyString
+  pays: MyString
+  code_postal: MyString
+  secteur_activite: MyString
+  post_souhaite: MyString
+  nom_contact: MyString
+  tel_contact: MyString
+  email_contact: MyString
+  sondage: MyString
+  nom_societe: MyString
+  num_entreprise_quebec: MyString
+  statut_juridique: MyString
+  nom_actionnaire_principal: MyString
+  actionnaire_tel: MyString
+  actionnaire_email: MyString
+  nom_gestionnaire: MyString
+  num_gesttionnaire: MyString
+  photo: MyString
+  cv: MyString
+  user: two

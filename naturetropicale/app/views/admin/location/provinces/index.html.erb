@@ -1,0 +1,51 @@
+
+<div class="my-4 mr-auto text-right" style="">
+  <%= link_to 'Créer une Province', new_admin_location_province_path, class: "btn-primary text-light btn-lg" %>      
+</div>
+<div class="card-box mb-30">
+  <h2 class="h4 pd-20">Liste des provinces</h2>
+
+  <!--<div class="w-50 px-3 my-4 float-left" style="">
+    <%= form_with url: admin_location_provinces_path, method: 'get', id: "search-filters", class: 'search' do |f| %>
+      <div>
+        <%= f.text_field :query, class: "form-control", type: "search", placeholder:"Search", "aria-label": "Search" %>
+      </div>
+    <% end %>
+  </div>-->
+  
+
+<table id="province" class="table table-responsive-sm display" style="width:100%">
+  <thead>
+      <tr>
+          <th>Province</th>
+          <th colspan="2" class="">Actions</th>
+      </tr>
+  </thead>
+  <tbody>
+    <% @admin_location_provinces.each do |admin_location_province| %>
+      <tr>
+        <td><%= admin_location_province.name %></td>
+        <td><%= link_to 'Modifier', edit_admin_location_province_path(admin_location_province) %></td>
+        <td><%= link_to 'Supprimer', admin_location_province, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<br>
+
+
+
+
+<script>
+  $(document).ready(function() {
+    $('#province').DataTable( {
+        "paging":   true,
+        "ordering": false,
+        "info":     true,
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/French.json"
+      }
+    });
+  });
+</script>

@@ -1,0 +1,17 @@
+<div class="nested-fields">
+    <%= form.hidden_field :_destroy %>
+    <%= form.hidden_field :profile_id, :value => @profile.id %>
+    <div class="row mb-2">
+      <%# elsif current_user.worker? || (current_user.admin? && @profile.user.worker?) %>
+      <div class="col-md-5">
+          <%= form.datetime_field :start_date, class:"form-control", id:"datetimepicker2" %>
+      </div>
+      <div class="col-md-5">
+          <%= form.datetime_field :end_date, class:"form-control", id:"datetimepicker2" %>
+      </div>
+    
+      <div class="col-md-2">
+        <%= link_to 'Supprimer', '#', class: 'remove_record' %>
+      </div>
+    </div>
+</div>

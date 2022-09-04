@@ -1,0 +1,9 @@
+<div class="container">
+    <div class="card-box">
+      <h2 class="h4 pd-20">Paiements</h2>
+       <% @jobs.each do |job| %>
+        <% job.proposals.where(job_id: job.id).each_with_index do | proposal, index | %> 
+          <p><%= link_to proposal.owner.nom, profile_path(proposal.owner.id)  %> a travaillé sur le job <%= job.admin_job_category.title%></p>
+        <% end %>
+       <%end%>
+</div>

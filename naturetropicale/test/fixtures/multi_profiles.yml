@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  admin_job_category: one
+  prix: 1
+  profile: one
+
+two:
+  admin_job_category: two
+  prix: 1
+  profile: two

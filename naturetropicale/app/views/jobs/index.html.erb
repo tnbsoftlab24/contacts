@@ -1,0 +1,26 @@
+
+<div class="">
+  <%# <div class="text-right">
+    <%#= link_to 'Nouveau Job', new_job_path, class:"btn btn-primary my-4 text-left text-light" %>
+  <%# </div>  %>
+
+  <%= form_tag jobs_path, :method => 'get', :id => "jobs_search" do %>
+    <div class="row justify-content-between">
+        <div class="my-4 col-md-5 d-flex">
+        <%= text_field_tag :search,"",class:"form-control w-100", placeholder: 'Rechercher un poste ou une adresse' %>
+        <div class="d-none">
+          <%= submit_tag "Recherche", :poste => nil %>
+        </div>
+      </div>
+      <div class="text-right col-md-4">
+        <% if current_user.admin? %>
+          <%= link_to 'Nouveau Job', job_for_enterprise_jobs_path, class:"btn btn-primary my-4 text-left text-light" %>
+        <% elsif current_user.enterprise?%>
+          <%= link_to 'Nouveau Job', new_job_path, class:"btn btn-primary my-4 text-left text-light" %>
+        <% end %>
+      </div>
+    </div>
+    <div id="jobs"><%= render 'jobs' %></div>
+  <% end %>
+</div>
+

@@ -1,0 +1,21 @@
+.fc-daygrid-event {
+    background-color: green !important;
+}
+
+.navbar-brand,
+li>.nav-link.active {
+    color: #fff !important;
+}
+
+.fc-event-time,
+.fc-event-title {
+    color: #fff !important;
+}
+
+.fc-daygrid-event-dot {
+    color: yellow !important;
+}
+
+.fc-direction-ltr .fc-daygrid-event.fc-event-start {
+    border-style: 4px solid !important;
+}

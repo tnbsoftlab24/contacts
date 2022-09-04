@@ -1,0 +1,26 @@
+<div class="nested-tarifs-fields">
+      <%= form.hidden_field :_destroy %>
+      <% if ((current_user.admin?  || current_user.assistant? ) && action_name == "edit") || (current_user.profile.present?)%>
+        <%= form.hidden_field :profile_id, :value => @profile.id %>
+      <% else %>
+        <%= form.hidden_field :profile_id, :value => current_user.id %>
+      <% end %>
+
+          <div class="row">
+            <div class="col-md-4">
+              <%= form.grouped_collection_select :admin_job_category_id, Admin::JobCategory.where(parent_id: nil).order(:title), :children, :title, :id, :title, {include_blank: "Choisir un poste..."}, {class: "form-control"} %>
+            </div>
+
+            <div class="col-md-6">
+              <%= form.number_field :prix, step: :any, class:"form-control" %>
+            </div>
+          
+            <div class="col-md-2">
+              <%= link_to 'Supprimer', '#', class: 'remove_record' %>
+            </div>
+          </div>
+        </tr>
+      </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,33 @@
+<div class="col-md-12 col-lg-12 col-xl-12 mx-auto">
+  <table class="data-table table-responsive-sm table nowrap form-box">
+    <thead>
+      <tr>
+        <th>Entreprise</th>
+        <th>Adresse Entreprise</th>
+        <th colspan="3"> Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @profiles.each do |profile| %>
+        <tr>
+          <% if profile.user.enterprise? && %>
+              <td><%= profile.nom_societe %></td>
+              <td><%= profile.adresse %></td>
+              <td><%= link_to 'Créer un job',  enterprise_profile_profile_path(profile.id),:class => "btn btn-primary text-dark",:id => 'test', method: :post  %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<script>
+$(document).on("turbolinks:load", () => {
+    $('#newJob').on('show.bs.modal', function(e) {
+        var profileId = $(e.relatedTarget).data('job-owner-id');
+        $(e.currentTarget).find('input[name="job[owner_id]"]#job-owner').val(profileId);
+    });
+});
+
+</script>

@@ -1,0 +1,5 @@
+<p>Salut <%= @proposal.job.owner.prenom %>!</p>
+<p>Votre job pour le poste « <%= @proposal.job.admin_job_category.title %> » a reçu une nouvelle proposition.</p>
+<p>Cliquez sur le lien suivant =><%= link_to "lien", proposal_url(@proposal)  %> afin de voir les détails</p>
+<p>Cordialement,</p>
+<p>L'équipe Nature Tropicale</p>

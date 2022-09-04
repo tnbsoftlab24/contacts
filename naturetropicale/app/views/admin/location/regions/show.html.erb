@@ -1,0 +1,13 @@
+
+
+<p>
+  <strong>Name:</strong>
+  <%= @admin_location_region.name %>
+</p>
+
+<p>
+  <strong>Province:</strong>
+  <%= @admin_location_region.province_id %>
+</p>
+
+<%= link_to 'Modifier', edit_admin_location_region_path(@admin_location_region) %> | <%= link_to 'retour', admin_location_regions_path%>
