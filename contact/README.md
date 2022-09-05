@@ -79,7 +79,7 @@ brew services restart postgresql@12
 ## Clone repository
 
 ```
-git clone https://github.com/tnbsoftlab24/naturetropicale.git
+git clone https://github.com/tnbsoftlab24/naturetropicale.git && cd naturetropicale/contact
 ```
 
 ## Install gems and yarn packages:
