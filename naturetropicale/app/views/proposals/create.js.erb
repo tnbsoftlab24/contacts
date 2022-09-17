@@ -1,6 +1,0 @@
-<% if @proposal.errors.blank? %>
-  $('#proposal-modal').modal('hide');
-  $('table tbody').append('<%= j render "proposal_row", proposal: @proposal %>');
-<% else %>
-  // TODO: show the errors in the UI
-<% end %>
